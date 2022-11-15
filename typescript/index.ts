@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { NextFunction, request, Request, Response } from "express";
 import session from "express-session";
 import path from "path";
 
@@ -132,12 +132,42 @@ class App {
         });
     }
 
+    class Article{
+        public name: string;
+
+        public title: string;
+        public contents: string;
+
+        public constructor(name: string, title: string, contents: string) {
+            this.name = name;
+            this.title = title;
+            this.contents = contents;
+        }
+
+    }
+
+    const bbs: Article[] = {
+        { name: 'tj', title: 'hello', contents: 'nice to meet you'},
+        { name: 'bj', title: 'I\'m new here', contents: 'yoroshiku'},
+        { name: 'tj', title: 'here again!', contents: 'anybody here?'},
+        { name: 'ts', title: 'rich people', contents: 'money ain\'t an issue'},
+    };
+
+    function listBbs(req: request, res:Response, next: NextFunction): void {
+        try {
+            res.render('bbs', {list:bbs});
+        } catch (error) {
+            next(error);
+        }
+    }
+
     private initializeRoutes() {
         this.app.get('/', index);
         this.app.get('/login', signUp);
         this.app.post('/login', logIn);
         this.app.get('/restricted', restricted);
         this.app.get('/logout', logOut);
+        this.app.get('/bbs', listBbs);
     }
 }
 
